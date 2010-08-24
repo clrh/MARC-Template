@@ -1,0 +1,69 @@
+MARC-Template
+
+009: noticeID
+
+$ as it 
+* die 
+
+610: { a: nom, b: prenom }
+
+% as it 
+# @% repeatable? cartesian porduct? wonder what? 
+* die 
+
+610: [ authors, { a: nom, b: prenom } ]
+@% repeatable 
+*  die
+
+610: [ authors, { a: 0, b: 1 } ]
+@@ repeatable 
+*  die
+
+
+subfield can be repeatable: a: notice
+009: [noticeID]
+
+next time
+610(01): [ authors(R) ]
+
+
+
+
+INSTALLATION
+
+To install this module, run the following commands:
+
+	perl Build.PL
+	./Build
+	./Build test
+	./Build install
+
+SUPPORT AND DOCUMENTATION
+
+After installing, you can find documentation for this module with the
+perldoc command.
+
+    perldoc MARC::Template
+
+You can also look for information at:
+
+    RT, CPAN's request tracker
+        http://rt.cpan.org/NoAuth/Bugs.html?Dist=MARC-Template
+
+    AnnoCPAN, Annotated CPAN documentation
+        http://annocpan.org/dist/MARC-Template
+
+    CPAN Ratings
+        http://cpanratings.perl.org/d/MARC-Template
+
+    Search CPAN
+        http://search.cpan.org/dist/MARC-Template
+
+
+COPYRIGHT AND LICENCE
+
+Copyright (C) 2009 Marc Chantreux
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
