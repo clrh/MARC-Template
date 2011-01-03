@@ -183,8 +183,8 @@ sub spell {
 	    } else { confess "$typeof_subfield reference not supported" }
 	} else {
 	    my $value = $$data{$subfield} or next FIELD;
-	    # print 'adding datafield', Dump [$fieldname, @I, $value];
-	    push @r, [$fieldname, @I, $value];
+	    # print 'adding datafield', Dump [$fieldname, $value];
+	    push @r, [$fieldname, $value];
 	}
     }
     @r ? \@r : undef;

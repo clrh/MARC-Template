@@ -28,7 +28,7 @@ new_usecase('
 ');
 
 ($r,$label) = $template->spell( { noticeID => 1515 } );
-$v = [[ '009',@I, 1515 ]];
+$v = [[ '009', 1515 ]];
 
 is_deeply ( $r, $v, usecase('simple datafield') ) or diag(Dump $r);
 
