@@ -1,0 +1,3 @@
+- better looking tests 
+- complete test suite (MARC::Record generation + test as_formatted output)
+- documentation
