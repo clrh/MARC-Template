@@ -1,0 +1,3 @@
+100: { a: [ gpd { encoding: utf8 } ] }
+200: { a: title, f: [authors] }
+995: [ items, { k: cote h: barcode } ]

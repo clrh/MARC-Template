@@ -1,0 +1,80 @@
+=head1 MARC::Template tutorial
+
+MARC::Template is a very simple way to create MARC::Record objects from datastructures representing biblio records or authorities. Migration of such type of data to a MARC related software is basically the same.
+
+=head2 Data Acquisition
+
+Read formated data from the source ( databases, xml, csv or text files) and get a datastructure representing your record. As example, if your file contains lines like that
+
+    Dieu joue-t-il aux dés ?|Les mathématiques du chaos|Ian Stewart;Benoit Mandelbrot(preface)|\
+    Champs Flammarion Sciences|Français|2080814117|978-2080814111
+
+first step is to translate this serialization to the perl relevant hash:
+
+    { title      => "Dieu joue-t-il aux dés ?"
+    , subtitle   => "Les mathématiques du chaos"
+    , isbn10     => 2080814117
+    , isbn13     => '978-2080814111'
+    , collection => "Champs Flammarion Sciences"
+    , lang       => 'Français'
+    , authors    =>
+	[ { name => "Ian Stewart"      , as => 'main'    }
+	, { name => "Benoit Mandelbrot", as => 'preface' }
+	]
+    }
+
+    000 nam 22 450
+    001FRBNF361700400000008
+    003http://catalogue.bnf.fr/ark:/12148/cb361700402
+    010 $a2-08-081302-1$bbr.
+    020 $aFR$b09740658
+    039 $oOPL$a022649094
+    100 $a19970620d1994 m y0frey50 ba
+    1011 $afre$ceng
+    102 $aFR
+    105 $aa z 00|y|
+    106 $ar
+    2001 $aDieu joue-t-il aux dés ?$bTexte imprimé$eles nouvelles mathématiques du chaos$fIan Stewart$gpréf. de Benoît Mandelbrot$gtrad. de l'anglais par Marianne Robert
+    210 $a[Paris]$cFlammarion$d1994$e45-Manchecourt$gImpr. Maury
+    215 $a441 p.$cill., couv. ill. en coul.$d18 cm
+    225| $aChamps$v302
+    300 $aBibliogr. p. 429-432. Index
+    410 0$034226030$tChamps.$x0151-8089$v302
+    454 1$tDoes God play dice ? : the new mathematics of chaos
+    606 $312119313$a Ordre et désordre ( physique)$2rameau
+    606 $311995448$a Chaos ( théorie des systèmes)$2rameau
+    686 $a50 $2Cadre de classement de la Bibliographie nationale française
+    700 |$312040641$aStewart$bIan$f1945-....$4070
+    702 |$311914221$aMandelbrot$bBenoît B.$f1924-2010$4080
+    702 |$312198931$aRobert$bMarianne$f1952-....$4730
+    801 0$aFR$bFR-751131015$c19970620$gAFNOR$hFRBNF361700400000008$2interm
+
+=head2 Data Correction and validation
+
+then you have to translate some values to correspond to existing MARC standards. For example, there is no such thing as as a "Français" langue in MARC format: this is 'fre'. You need to translate it it using a hash translation:
+
+    for ( $$biblio{lang} ) {
+
+	# default value is 'fre'
+	unless ( $_ ) {
+	    $rapport{"lang unset"}++;
+	    $_ = "fre";
+	    last;
+	}
+
+	# don't touch if it's correctly encoded
+	last if $_ ~~ [values %code_for_lang];
+
+	# we have a proposition for this lang 
+	if ( my $lang = $code_for_lang{$_} ) { $_ = $lang }
+
+	# or we report it as UNKNOWN
+	# your ILS must be set to accept it
+	# (so it can be easy to report bad records )
+	else {
+	    $rapport{"unknown lang"}{$_}++;
+	    $_ = "UNKNOWN";
+	}
+    }
+
+
